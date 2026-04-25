@@ -1,13 +1,15 @@
 spring:
   application:
     name: gagent
+  config:
+    import: optional:file:.env[.properties]
 
 
   # ── PostgreSQL ──
   datasource:
-    url: jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?prepareThreshold=0
-    username: ${DB_USERNAME:postgres.yefgbbtjulretcazsfyz}
-    password: ${DB_PASSWORD:Aa0988068578.}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -22,7 +24,11 @@ spring:
 
 # ── Application Properties ──
 app:
-  jwt-secret: ${JWT_SECRET:6fa72e20f64b00b6b8c2abf50fca10f11a9e3b8e3f9e056e8e251ad26b2bca8d7a3ce9f1a1df7ab4c1f7f14b9d6d1c9f5df9e6a3c98e7c1d}
+  jwt-secret: ${JWT_SECRET}
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
 
 server:
-  port: ${PORT:8080}
+  port: ${PORT}

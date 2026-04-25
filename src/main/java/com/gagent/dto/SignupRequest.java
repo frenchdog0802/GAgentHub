@@ -3,7 +3,6 @@ package com.gagent.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import java.util.*;
 
 @Data
 @Builder

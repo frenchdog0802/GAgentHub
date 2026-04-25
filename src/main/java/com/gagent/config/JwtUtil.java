@@ -33,13 +33,13 @@ public class JwtUtil {
     /**
      * Extract user_id from token.
      */
-    public UUID getUserIdFromToken(String token) {
+    public String getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return UUID.fromString(claims.get("user_id", String.class));
+        return claims.get("user_id", String.class);
     }
 
     /**
