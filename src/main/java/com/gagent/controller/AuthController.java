@@ -12,6 +12,7 @@ import com.gagent.dto.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final AuthService authService;
@@ -33,10 +34,9 @@ public class AuthController {
         return ResponseEntity.ok(new SignoutResponse("signed out"));
     }
 
-    // @PostMapping("/google-login")
-    // public ResponseEntity<GoogleLoginResponse> googleLogin(@Valid @RequestBody
-    // GoogleLoginRequest request) {
-    // GoogleLoginResponse data = authService.googleLogin(request);
-    // return ResponseEntity.ok(data);
-    // }
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ForgotPasswordResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        ForgotPasswordResponse data = authService.forgotPassword(request);
+        return ResponseEntity.ok(data);
+    }
 }

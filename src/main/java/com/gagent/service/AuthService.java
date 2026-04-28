@@ -70,73 +70,21 @@ public class AuthService {
                 .build();
     }
 
-    // // ── Google Login ──
+    // ── Forgot Password ──
 
-    // public GoogleLoginResponse googleLogin(GoogleLoginRequest request) {
-    // try {
-    // RestTemplate restTemplate = new RestTemplate();
+    public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
 
-    // // Step 1: Validate token
-    // @SuppressWarnings("unchecked")
-    // Map<String, Object> tokenInfo = restTemplate.getForObject(
-    // "https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=" +
-    // request.getToken(),
-    // Map.class);
+        String salt = makeSalt();
+        String hashedPassword = encryptPassword(request.getNewPassword(), salt);
 
-    // if (tokenInfo == null)
-    // throw new BadRequestException("Invalid Google token");
+        user.setSalt(salt);
+        user.setHashedPassword(hashedPassword);
+        userRepository.save(user);
 
-    // String googleId = (String) tokenInfo.get("sub");
-
-    // // Check if user exists
-    // Optional<User> existingUser = userRepository.findByGoogleId(googleId);
-    // if (existingUser.isPresent()) {
-    // User user = existingUser.get();
-    // String token = jwtUtil.generateToken(user.getId());
-    // return GoogleLoginResponse.builder()
-    // .token(token)
-    // .user(toUserDto(user))
-    // .build();
-    // }
-
-    // // Step 2: Get user info
-    // @SuppressWarnings("unchecked")
-    // Map<String, Object> userInfo = restTemplate.getForObject(
-    // "https://www.googleapis.com/oauth2/v3/userinfo?access_token=" +
-    // request.getToken(),
-    // Map.class);
-
-    // if (userInfo == null)
-    // throw new BadRequestException("Failed to fetch Google user info");
-
-    // String salt = makeSalt();
-    // User newUser = User.builder()
-    // .googleId(googleId)
-    // .email((String) userInfo.get("email"))
-    // .firstName((String) userInfo.getOrDefault("given_name", "User"))
-    // .lastName((String) userInfo.getOrDefault("family_name", ""))
-    // .name((String) userInfo.getOrDefault("name", "User"))
-    // .picture((String) userInfo.get("picture"))
-    // .salt(salt)
-    // .hashedPassword(encryptPassword(UUID.randomUUID().toString(), salt))
-    // .connectAccount("Google")
-    // .role("user")
-    // .build();
-
-    // newUser = userRepository.save(newUser);
-    // String token = jwtUtil.generateToken(newUser.getId());
-    // return GoogleLoginResponse.builder()
-    // .token(token)
-    // .user(toUserDto(newUser))
-    // .build();
-    // } catch (BadRequestException e) {
-    // throw e;
-    // } catch (Exception e) {
-    // log.error("Google login error", e);
-    // throw new BadRequestException("Authentication failed: Invalid or expired
-    // Google Access Token.");
-    // }
-    // }
+        return new ForgotPasswordResponse("Password reset successfully");
+    }
 
     // ── Helper: Convert User entity to UserDto ──
 
