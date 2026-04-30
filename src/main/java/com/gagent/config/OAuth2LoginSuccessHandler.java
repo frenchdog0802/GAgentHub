@@ -21,9 +21,10 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final JwtUtil jwtUtil;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        
+
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
         String googleId = oAuth2User.getAttribute("sub");
@@ -45,7 +46,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String token = jwtUtil.generateToken(user.getId());
 
         // Redirect to frontend with token
-        String redirectUrl = "http://localhost:5173?token=" + token;
+        String redirectUrl = "http://localhost:3000?token=" + token;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }
