@@ -20,6 +20,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
+    @org.springframework.beans.factory.annotation.Value("${app.frontend-url}")
+    private String frontendUrl;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
@@ -46,7 +49,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String token = jwtUtil.generateToken(user.getId());
 
         // Redirect to frontend with token
-        String redirectUrl = "http://localhost:3000?token=" + token;
+        String redirectUrl = frontendUrl + "?token=" + token;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }
